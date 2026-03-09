@@ -20,6 +20,7 @@
         <module>selab-common</module>
         <module>selab-framework</module>
         <module>selab-admin</module>
+        <module>selab-blog</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -93,6 +94,13 @@
             <dependency>
                 <groupId>tyut.selab</groupId>
                 <artifactId>selab-admin</artifactId>
+                <version>${foreign.version}</version>
+            </dependency>
+
+            <!-- 博客服务-->
+            <dependency>
+                <groupId>tyut.selab</groupId>
+                <artifactId>selab-blog</artifactId>
                 <version>${foreign.version}</version>
             </dependency>
 
