@@ -20,6 +20,7 @@
         <module>selab-common</module>
         <module>selab-framework</module>
         <module>selab-admin</module>
+        <module>Graduation-Project</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -87,6 +88,12 @@
             <dependency>
                 <groupId>tyut.selab</groupId>
                 <artifactId>selab-framework</artifactId>
+                <version>${foreign.version}</version>
+            </dependency>
+            <!-- 毕业设计-->
+            <dependency>
+                <groupId>tyut.selab</groupId>
+                <artifactId>Graduation-Project</artifactId>
                 <version>${foreign.version}</version>
             </dependency>
             <!-- 后台服务-->

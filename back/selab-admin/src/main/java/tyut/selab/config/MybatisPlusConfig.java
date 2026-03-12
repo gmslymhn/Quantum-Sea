@@ -13,7 +13,9 @@ import org.springframework.context.annotation.Configuration;
  * @Version: 1.0
  **/
 @Configuration
-@MapperScan(basePackages = {"tyut.selab.framework.mapper"})
+@MapperScan(basePackages = {
+        "tyut.selab.framework.mapper",
+        "tyut.selab.Graduation.mapper"})
 public class MybatisPlusConfig {
 
     /**
