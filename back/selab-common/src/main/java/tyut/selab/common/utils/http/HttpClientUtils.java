@@ -56,7 +56,7 @@ public class HttpClientUtils {
 
     public static CloseableHttpClient httpClient = HttpClients.createDefault();
     static {
-        log.info("设置httpclient5超时时间,tls,连接池等属性");
+//        log.info("设置httpclient5超时时间,tls,连接池等属性");
         // 设置超时时间
         RequestConfig config = RequestConfig.custom().setConnectTimeout(Timeout.ofMilliseconds(60000L))
                 .setConnectionRequestTimeout(Timeout.ofMilliseconds(60000L))
@@ -114,7 +114,7 @@ public class HttpClientUtils {
      * @return
      */
     public static String get(String url, Map<String, Object> headers, Map<String, Object> params) {
-        log.info("httpclient5 get start url="+url+"headers="+headers+",params="+params);
+//        log.info("httpclient5 get start url="+url+"headers="+headers+",params="+params);
 
         String resultContent = null;
         HttpGet httpGet = new HttpGet(url);
@@ -146,31 +146,31 @@ public class HttpClientUtils {
             // 获取状态码
             // 检查响应状态码
             int statusCode = response.getCode();
-            System.out.println(response.getVersion()); // HTTP/1.1
-            System.out.println(response.getCode()); // 200
-            System.out.println(response.getReasonPhrase()); // OK
+//            System.out.println(response.getVersion()); // HTTP/1.1
+//            System.out.println(response.getCode()); // 200
+//            System.out.println(response.getReasonPhrase()); // OK
             HttpEntity entity = response.getEntity();
             if (statusCode == HttpStatus.SC_MOVED_PERMANENTLY || statusCode == HttpStatus.SC_MOVED_TEMPORARILY) {
                 // 获取重定向网址
                 String redirectUrl = response.getFirstHeader("Location").getValue();
-                log.info("Redirected to URL: " + redirectUrl);
+//                log.info("Redirected to URL: " + redirectUrl);
                 return redirectUrl; // 返回新的网址
             }
             // 获取响应信息
             resultContent = EntityUtils.toString(entity,"UTF-8");
-            log.info("httpclient5 get end url="+url+"headers="+headers+",params="+params+",result="+resultContent);
+//            log.info("httpclient5 get end url="+url+"headers="+headers+",params="+params+",result="+resultContent);
             // 确保流被完全消费
             EntityUtils.consume(entity);
         } catch (Exception e) {
             e.printStackTrace();
-            log.info("Exception httpclient5 get url="+url+"headers="+headers+",params="+params+",exception="+e.getStackTrace());
+//            log.info("Exception httpclient5 get url="+url+"headers="+headers+",params="+params+",exception="+e.getStackTrace());
 
         }
 
         return resultContent;
     }
     public static String get2(String url, Map<String, Object> headers) {
-        log.info("httpclient5 get start url="+url+" headers="+headers);
+//        log.info("httpclient5 get start url="+url+" headers="+headers);
 
         String resultContent = null;
         HttpGet httpGet = new HttpGet(url);
@@ -191,24 +191,24 @@ public class HttpClientUtils {
 
             // 检查响应状态码
             int statusCode = response.getCode();
-            System.out.println(response.getVersion()); // HTTP/1.1
-            System.out.println(statusCode); // 状态码
-            System.out.println(response.getReasonPhrase()); // 状态描述
+//            System.out.println(response.getVersion()); // HTTP/1.1
+//            System.out.println(statusCode); // 状态码
+//            System.out.println(response.getReasonPhrase()); // 状态描述
 
             if (statusCode == HttpStatus.SC_MOVED_PERMANENTLY || statusCode == HttpStatus.SC_MOVED_TEMPORARILY) {
                 // 获取重定向网址
                 String redirectUrl = response.getFirstHeader("Location").getValue();
-                log.info("Redirected to URL: " + redirectUrl);
+//                log.info("Redirected to URL: " + redirectUrl);
                 return redirectUrl; // 返回新的网址
             }
 
             HttpEntity entity = response.getEntity();
             resultContent = EntityUtils.toString(entity, "UTF-8");
-            log.info("httpclient5 get end url=" + url + " headers=" + headers + ", result=" + resultContent);
+//            log.info("httpclient5 get end url=" + url + " headers=" + headers + ", result=" + resultContent);
             EntityUtils.consume(entity);
         } catch (IOException | ParseException e) {
             e.printStackTrace();
-            log.info("Exception httpclient5 get url=" + url + " headers=" + headers +  ", exception=" + e.getMessage());
+//            log.info("Exception httpclient5 get url=" + url + " headers=" + headers +  ", exception=" + e.getMessage());
         }
 
         return resultContent;
@@ -222,7 +222,7 @@ public class HttpClientUtils {
      * @return
      */
     public static String postForm(String url, Map<String, String> headers, Map<String, Object> params) {
-        log.info("httpclient5 postForm start url="+url+"headers="+headers+",params="+params);
+//        log.info("httpclient5 postForm start url="+url+"headers="+headers+",params="+params);
 
         String result = null;
         HttpPost httpPost = new HttpPost(url);
@@ -242,20 +242,20 @@ public class HttpClientUtils {
         httpPost.setEntity(new UrlEncodedFormEntity(nvps, Charset.forName("UTF-8")));
 
         try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
-            System.out.println(response.getVersion()); // HTTP/1.1
-            System.out.println(response.getCode()); // 200
-            System.out.println(response.getReasonPhrase()); // OK
+//            System.out.println(response.getVersion()); // HTTP/1.1
+//            System.out.println(response.getCode()); // 200
+//            System.out.println(response.getReasonPhrase()); // OK
 
             HttpEntity entity = response.getEntity();
             // 获取响应信息
             result = EntityUtils.toString(entity,"UTF-8");
-            log.info("httpclient5 postForm end url="+url+"headers="+headers+",params="+params+",result="+result);
+//            log.info("httpclient5 postForm end url="+url+"headers="+headers+",params="+params+",result="+result);
 
             // 确保流被完全消费
             EntityUtils.consume(entity);
         } catch (Exception e) {
             e.printStackTrace();
-            log.info("Exception httpclient5 postForm url="+url+"headers="+headers+",params="+params+",exception="+e.getStackTrace());
+//            log.info("Exception httpclient5 postForm url="+url+"headers="+headers+",params="+params+",exception="+e.getStackTrace());
 
         }
 
@@ -292,9 +292,9 @@ public class HttpClientUtils {
         try {
             response = httpClient.execute(httpPost);
 //			Header[] header=response.getHeaders();
-            System.out.println(response.getVersion()); // HTTP/1.1
-            System.out.println(response.getCode()); // 200
-            System.out.println(response.getReasonPhrase()); // OK
+//            System.out.println(response.getVersion()); // HTTP/1.1
+//            System.out.println(response.getCode()); // 200
+//            System.out.println(response.getReasonPhrase()); // OK
 //
 //			HttpEntity entity = response.getEntity();
 //			// 获取响应信息
@@ -315,7 +315,7 @@ public class HttpClientUtils {
      * @return
      */
     public static String postJson(String url, String jsonBody) {
-        log.info("httpclient5 postJson start url="+url+",jsonBody="+jsonBody);
+//        log.info("httpclient5 postJson start url="+url+",jsonBody="+jsonBody);
 
         String result = null;
         HttpPost httpPost = new HttpPost(url);
@@ -327,10 +327,10 @@ public class HttpClientUtils {
             result = EntityUtils.toString(response.getEntity(),"UTF-8");
         } catch (IOException | ParseException e) {
             e.printStackTrace();
-            log.info("Exception postJson postForm url="+url+",jsonBody="+jsonBody+",exception="+e.getStackTrace());
+//            log.info("Exception postJson postForm url="+url+",jsonBody="+jsonBody+",exception="+e.getStackTrace());
 
         }
-        log.info("httpclient5 postJson end url="+url+",result="+result);
+//        log.info("httpclient5 postJson end url="+url+",result="+result);
 
         return result;
     }

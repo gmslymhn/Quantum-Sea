@@ -20,6 +20,7 @@
         <module>selab-common</module>
         <module>selab-framework</module>
         <module>selab-admin</module>
+        <module>pubgmhd</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -93,6 +94,13 @@
             <dependency>
                 <groupId>tyut.selab</groupId>
                 <artifactId>selab-admin</artifactId>
+                <version>${foreign.version}</version>
+            </dependency>
+
+            <!-- HPJY-->
+            <dependency>
+                <groupId>tyut.selab</groupId>
+                <artifactId>pubgmhd</artifactId>
                 <version>${foreign.version}</version>
             </dependency>
 
