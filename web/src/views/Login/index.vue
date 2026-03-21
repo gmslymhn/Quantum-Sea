@@ -1,9 +1,15 @@
 <template>
-  <div class="login-container flex">
+  <div class="login-container">
+    <!-- 移动端隐藏左侧图片 -->
     <img src="../../../public/img/login-left.png" class="login-left" />
+
     <div class="login-right flex flex-col">
-      <div class="fz-20 text-center text-bold">欢迎登录创新实验室平台</div>
-      <div class="text-center mb-20">WELCOME</div>
+      <!-- 添加响应式标题 -->
+      <div class="login-title">
+        <div class="fz-20 text-center text-bold">欢迎登录校园舆情分析平台</div>
+        <div class="text-center mb-20">WELCOME</div>
+      </div>
+
       <el-form :model="form" :rules="rules" ref="ruleForm" @submit.prevent="onSubmit">
         <el-form-item class="login-input flex" prop="name">
           <el-icon class="flex1"><User /></el-icon>
@@ -146,56 +152,206 @@ const onSubmit = () => {
 </script>
 
 <style scoped>
+/* 基础样式 */
 .login-container {
   width: 100vw;
-  height: 100vh;
-  background: url("../../../public/img/login.png") no-repeat;
+  min-height: 100vh;
+  background: url("../../../public/img/login.png") no-repeat center center;
   background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
+
+/* 左侧图片 - 桌面端显示，移动端隐藏 */
 .login-left {
-  width: 58%;
-  height: 100%;
+  display: none; /* 移动端默认隐藏 */
 }
+
+/* 右侧登录框 - 基础样式 */
 .login-right {
-  width: 25%;
-  height: 56%;
+  width: 100%;
+  max-width: 420px;
+  min-height: 500px;
   background-color: #fff;
-  margin: auto;
   border-radius: 10px;
   box-shadow: #b3d2fb 1px 1px 15px 1px;
   padding: 40px 30px;
+  margin: 0 auto;
 }
+
+/* 登录输入框 */
 .login-input {
-    height:50px;
+  height: 50px;
   border: 1px solid #b3d2fb;
   border-radius: 5px;
   background: rgba(231, 241, 253, 0.4);
 }
+
 .login-input-right {
   width: 80%;
   height: 60%;
   border-left: 1px solid #ccc;
 }
-.login-remember {
-    font-size: 12px;
-}
+
 .login-btn {
+  height: 40px;
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+  .login-container {
+    padding: 10px;
+    background: #f5f7fa; /* 移动端使用纯色背景 */
+  }
+
+  .login-right {
+    min-height: auto;
+    padding: 30px 20px;
+    max-width: 100%;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .login-title {
+    margin-bottom: 20px;
+  }
+
+  .login-title .fz-20 {
+    font-size: 18px !important;
+  }
+
+  .login-title .mb-20 {
+    margin-bottom: 15px;
+    font-size: 14px;
+  }
+
+  .login-input {
+    height: 44px;
+  }
+
+  .login-btn {
+    height: 44px;
+    font-size: 16px;
+  }
+
+  .login-remember {
+    font-size: 12px;
+  }
+
+  .register-text {
+    font-size: 13px;
+  }
+
+  /* 调整表单间距 */
+  .el-form-item {
+    margin-bottom: 16px;
+  }
+}
+
+/* 小屏幕手机适配 */
+@media screen and (max-width: 375px) {
+  .login-right {
+    padding: 25px 15px;
+  }
+
+  .login-title .fz-20 {
+    font-size: 16px !important;
+  }
+
+  .login-input {
     height: 40px;
+  }
+
+  .login-btn {
+    height: 40px;
+  }
+
+  /* 调整图标大小 */
+  .el-icon {
+    font-size: 18px;
+  }
+}
+
+/* 平板设备适配 */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .login-left {
+    display: block;
+    width: 45%;
+    height: auto;
+  }
+
+  .login-right {
+    width: 35%;
+    max-width: 380px;
+  }
+}
+
+/* 桌面端适配 */
+@media screen and (min-width: 1025px) {
+  .login-container {
+    justify-content: space-between;
+    padding: 0;
+  }
+
+  .login-left {
+    display: block;
+    width: 58%;
+    height: 100vh;
+    object-fit: cover;
+  }
+
+  .login-right {
+    width: 25%;
+    height: 56%;
+    margin: auto 10% auto auto;
+  }
+}
+
+/* 大屏幕桌面适配 */
+@media screen and (min-width: 1440px) {
+  .login-right {
+    width: 420px;
+    padding: 50px 40px;
+  }
 }
 </style>
+
 <style>
+/* 全局样式调整 */
 .login-input-right .el-input__wrapper {
   border: none !important;
   box-shadow: none !important;
   background: transparent;
 }
+
 .login-remember .el-checkbox__label {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* 移动端调整Element Plus组件 */
+@media screen and (max-width: 768px) {
+  .el-input__inner {
+    font-size: 14px;
+  }
+
+  .el-button {
+    font-size: 14px;
+  }
+
+  .el-checkbox__label {
     font-size: 12px;
-    color:#aaa;
+  }
+
+  .el-link {
+    font-size: 13px;
+  }
 }
 </style>
+
 <style scoped>
-/* 添加注册链接的样式 */
+/* 注册链接样式 */
 .register-link {
   display: flex;
   justify-content: center;
@@ -208,3 +364,4 @@ const onSubmit = () => {
   font-size: 14px;
 }
 </style>
+
