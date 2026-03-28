@@ -11,6 +11,15 @@ import loginLogList from "@/views/Log/loginLogList.vue";
 import sysLogList from "@/views/Log/sysLogList.vue";
 import resourceList from "@/views/Resource/resourceList.vue";
 import imgCache from "@/views/Resource/imgCache.vue";
+import lizardLogList from "@/views/Lizard/lizardLogList.vue";
+import newPostData from "@/views/Lizard/newPostData.vue";
+import postDataList from "@/views/Post/postDataList.vue";
+import postTrendAnalysis from "@/views/Post/postTrendAnalysis.vue";
+import userBehaviorAnalysis from "@/views/Post/userBehaviorAnalysis.vue";
+import contentQualityAnalysis from "@/views/Post/contentQualityAnalysis.vue";
+import interactionAnalysis from "@/views/Post/interactionAnalysis.vue";
+import predictionAnalysis from "@/views/Post/predictionAnalysis.vue";
+import dashboardAnalysis from "@/views/Post/dashboardAnalysis.vue";
 
 
 
@@ -23,6 +32,17 @@ const componentObj = {
   sysLogList,
   resourceList,
   imgCache,
+  lizardLogList,
+  newPostData,
+  postDataList,
+  postTrendAnalysis,
+  userBehaviorAnalysis,
+  contentQualityAnalysis,
+  interactionAnalysis,
+  predictionAnalysis,
+  dashboardAnalysis
+
+
 }
 const iconList = {
   formTemplate: 'Tickets',
@@ -33,6 +53,8 @@ const iconList = {
   user:'User',
   log:'MessageBox',
   resource:"UploadFilled",
+  lizard:"WindPower",
+  post:"SwitchFilled",
 }
 /**
  * 动态添加用户路由权限

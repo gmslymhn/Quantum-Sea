@@ -39,8 +39,8 @@ export const tableConfig = [
     label: '昵称'
   },
   {
-    prop: 'userDepartmentName',
-    label: '部门'
+    prop: 'lastLoginIp',
+    label: '最后登录ip'
   },
   {
     prop: 'userEmail',

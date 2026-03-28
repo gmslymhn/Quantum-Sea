@@ -138,6 +138,9 @@ springdoc:
     - group: '后端框架'
       paths-to-match: '/**'
       packages-to-scan: tyut.selab.framework.controller
+    - group: '太理集市'
+      paths-to-match: '/**'
+      packages-to-scan: tyut.selab.Graduation.controller
 
 # Xxl-Job分布式定时任务调度中心
 xxl:
