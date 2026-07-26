@@ -221,7 +221,7 @@ public class HttpClientUtils {
      * @param params
      * @return
      */
-    public static String postForm(String url, Map<String, String> headers, Map<String, Object> params) {
+    public static String postForm(String url, Map<String, Object> headers, Map<String, Object> params) {
         log.info("httpclient5 postForm start url="+url+"headers="+headers+",params="+params);
 
         String result = null;

@@ -51,4 +51,8 @@ export function getUserBehaviorAnalysisApi() {
   return authorizationHttp.post('/background/post/getUserBehaviorAnalysis');
 }
 
+export function getHotPostDataApi() {
+  return authorizationHttp.post('/background/post/getHotPostData');
+}
+
 

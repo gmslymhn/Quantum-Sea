@@ -1,14 +1,12 @@
 package tyut.selab.Graduation.controller;
 
+import com.alibaba.fastjson2.JSONObject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tyut.selab.Graduation.domain.PostParam;
 import tyut.selab.Graduation.domain.TimeRangeParam;
 import tyut.selab.Graduation.service.IPostDataService;
@@ -77,6 +75,19 @@ public class PostDataController {
     @Operation(summary = "综合仪表盘")
     public R getDashboardAnalysis(){
         return iPostDataService.getDashboardAnalysis();
+    }
+
+    /**
+     * 获取热点帖子数据（默认参数）
+     */
+    @PostMapping("/getHotPostData")
+    public R getHotPostData() {
+        return iPostDataService.getHotPostData();
+    }
+
+    @GetMapping("/getPostDetail")
+    public JSONObject getPostDetail(@RequestParam String threadId) {
+        return iPostDataService.getPostCompleteData(threadId);
     }
 
 }

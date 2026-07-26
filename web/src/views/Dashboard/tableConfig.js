@@ -37,3 +37,4 @@ export const tableConfig2 = [
         slotName: 'url'
     }
 ]
+

@@ -38,17 +38,17 @@ public class Test {
     @org.junit.Test
     public void test1(){
 
-        List<PostDataEntity> postDataEntities = postCrawler.crawlPosts("1707546893");
+        List<PostDataEntity> postDataEntities = postCrawler.crawlPosts("1775174975");
         System.out.println(postDataEntities);
     }
     @org.junit.Test
-    @Transactional
-    @Rollback(false)
+//    @Transactional
+//    @Rollback(false)
     public void testBatchCrawlWithTimestampLoop() {
         // 初始时间戳
-        long startTimestamp = 1773132292;
+        long startTimestamp = 1775174975;
         // 每次减少的时间
-        long decrement = 300L;
+        long decrement = 600L;
         // 最大循环次数
         int maxLoops = 100;
         // 循环间隔（秒）
@@ -101,6 +101,7 @@ public class Test {
                                     int result = postDataMapper.insert(post);
                                     if (result > 0) {
                                         loopSuccess++;
+                                        PostDataEntity test = postDataMapper.selectById(post.getPostId());
                                         log.debug("插入成功: thread_id={}", post.getThreadId());
                                     } else {
                                         loopError++;

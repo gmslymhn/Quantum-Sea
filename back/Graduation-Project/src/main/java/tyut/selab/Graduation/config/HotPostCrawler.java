@@ -14,58 +14,27 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 /**
- * @ClassName: PostCrawler
- * @Description: 帖子数据爬取服务
+ * @ClassName: HotPostCrawler
+ * @Description: 热门帖子数据爬取服务
  * @Author: gmslymhn
  * @CreateTime: 2026-03-09 22:12
  * @Version: 1.0
  **/
 @Slf4j
 @Component
-public class PostCrawler {
+public class HotPostCrawler {
 
-    // 接口基础URL
-    private static final String API_BASE_URL = "http://api.app.zanao.com/thread/v2/list";
+    // 热门帖子接口基础URL
+    private  final String HOT_API_BASE_URL = "http://api.app.zanao.com/thread/hot";
 
     // 固定密钥
-    private static final String SECRET_KEY = "16457b3fea31e0a2dcd6c84b40bc2c97";
-
-    // 请求头信息 - 改为动态生成
-    private Map<String, Object> generateHeaders(String xScNd, String xScTd, String fromTime) {
-        Map<String, Object> headers = new HashMap<>();
-
-        // 生成签名（X-Sc-Ah）
-        String xScAh = generateSignature(xScNd, xScTd, fromTime);
-
-        // 设置请求头
-        headers.put("X-Sc-Nd", xScNd);
-        headers.put("X-Requested-With", "XMLHttpRequest");
-        headers.put("X-Sc-Td", xScTd);
-        headers.put("X-Sc-Hb-V", "170");
-        headers.put("X-Sc-Nt-V", "236");
-        headers.put("X-Sc-Alias", "tyut");
-        headers.put("X-Sc-Client", "app");
-        headers.put("X-Sc-Platform", "Android");
-        headers.put("X-Sc-Device", "ffffffff-917e-5995-ffff-ffffef05ac4a-b4f5926bb8e6bee8");
-        headers.put("X-Sc-Version", "2.3.6");
-        headers.put("X-Sc-Token", "Sy9CQ1BzSXk0UEFjaE52TDkvbTUxZ0pER2sxdmlHWXZoUWVGV2ZvOHArOD0%3D");
-        headers.put("X-Sc-Ah", xScAh);
-
-        // 添加一些通用请求头
-        headers.put("User-Agent", "Mozilla/5.0 (Linux; Android 10; SM-G975F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36");
-        headers.put("Accept", "application/json, text/plain, */*");
-        headers.put("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
-        headers.put("Accept-Encoding", "gzip, deflate");
-        headers.put("Connection", "keep-alive");
-
-        return headers;
-    }
+    private  final String SECRET_KEY = "16457b3fea31e0a2dcd6c84b40bc2c97";
 
     /**
      * 生成20位随机数字符串
      * @return 随机数字符串
      */
-    private String generateRandomNumber() {
+    private  String generateRandomNumber() {
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 20; i++) {
@@ -75,20 +44,30 @@ public class PostCrawler {
     }
 
     /**
-     * 生成X-Sc-Ah签名
-     * 格式：from_time={fromTime}&randnum__={X-Sc-Nd}&timestamp__={X-Sc-Td}&with_comment=true&with_reply=true&secretkey={SECRET_KEY}
+     * 生成热门帖子接口的X-Sc-Ah签名
+     * 格式：count={count}&type={type}&secretkey={SECRET_KEY}
      * 然后计算MD5
      *
-     * @param xScNd X-Sc-Nd值
-     * @param xScTd X-Sc-Td值
-     * @param fromTime from_time参数值
+     * @param count 帖子数量
+     * @param type 类型
      * @return MD5签名
      */
-    private String generateSignature(String xScNd, String xScTd, String fromTime) {
+    /**
+     * 生成热门帖子接口的X-Sc-Ah签名
+     * 格式：count={count}&randnum__={X-Sc-Nd}&timestamp__={X-Sc-Td}&type={type}&secretkey={SECRET_KEY}
+     * 然后计算MD5
+     *
+     * @param count 帖子数量
+     * @param type 类型
+     * @param xScNd 随机数
+     * @param xScTd 时间戳
+     * @return MD5签名
+     */
+    private  String generateHotSignature(Integer count, Integer type, String xScNd, String xScTd) {
         // 构建参数字符串
         String paramString = String.format(
-                "from_time=%s&randnum__=%s&timestamp__=%s&with_comment=true&with_reply=true&secretkey=%s",
-                fromTime, xScNd, xScTd, SECRET_KEY
+                "count=%d&randnum__=%s&timestamp__=%s&type=%d&secretkey=%s",
+                count, xScNd, xScTd, type, SECRET_KEY
         );
 
         // 计算MD5
@@ -100,7 +79,7 @@ public class PostCrawler {
      * @param input 输入字符串
      * @return MD5哈希值（大写）
      */
-    private String calculateMD5(String input) {
+    private  String calculateMD5(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] digest = md.digest(input.getBytes(StandardCharsets.UTF_8));
@@ -123,32 +102,64 @@ public class PostCrawler {
     }
 
     /**
-     * 构建完整的API URL
-     * @param fromTime from_time参数值
+     * 为热门帖子接口生成请求头
+     * @param count 帖子数量
+     * @param type 类型
+     * @return 请求头Map
+     */
+    private  Map<String, Object> generateHotHeaders(Integer count, Integer type, String xScNd, String xScTd) {
+        Map<String, Object> headers = new HashMap<>();
+
+        // 生成签名（X-Sc-Ah） - 包含随机数和时间戳
+        String xScAh = generateHotSignature(count, type, xScNd, xScTd);
+
+        // 设置请求头
+        headers.put("X-Sc-Nd", xScNd);
+        headers.put("X-Requested-With", "XMLHttpRequest");
+        headers.put("X-Sc-Td", xScTd);
+        headers.put("X-Sc-Hb-V", "180");
+        headers.put("X-Sc-Nt-V", "240");
+        headers.put("X-Sc-Alias", "tyut");
+        headers.put("X-Sc-Client", "app");
+        headers.put("X-Sc-Platform", "Android");
+        headers.put("X-Sc-Device", "ffffffff-917e-5995-ffff-ffffef05ac4a-b4f5926bb8e6bee8");
+        headers.put("X-Sc-Version", "2.4.0");
+        headers.put("X-Sc-Token", "Sy9CQ1BzSXk0UEFjaE52TDkvbTUxZ0pER2sxdmlHWXZoUWVGV2ZvOHArOD0%3D");
+        headers.put("X-Sc-Ah", xScAh);
+
+        // 添加一些通用请求头
+        headers.put("User-Agent", "Mozilla/5.0 (Linux; Android 10; SM-G975F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36");
+        headers.put("Accept", "application/json, text/plain, */*");
+        headers.put("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
+        headers.put("Accept-Encoding", "gzip, deflate");
+        headers.put("Connection", "keep-alive");
+
+        return headers;
+    }
+    /**
+     * 构建热门帖子API URL
+     * @param count 帖子数量
+     * @param type 类型
      * @return 完整的API URL
      */
-    private String buildApiUrl(String fromTime) {
-        return String.format("%s?with_reply=true&from_time=%s&with_comment=true",
-                API_BASE_URL, fromTime);
+    private  String buildHotApiUrl(Integer count, Integer type) {
+        return String.format("%s?count=%d&type=%d", HOT_API_BASE_URL, count, type);
     }
 
     /**
-     * 爬取帖子数据（默认从最新开始）
+     * 爬取热门帖子数据
+     * @param count 帖子数量，默认10
+     * @param type 类型，默认3
      * @return 帖子实体列表
      */
-    public List<PostDataEntity> crawlPosts() {
-        return crawlPosts("0"); // 默认from_time=0
-    }
-
-    /**
-     * 爬取帖子数据（指定from_time）
-     * @param fromTime 起始时间戳（秒级），"0"表示从最新开始
-     * @return 帖子实体列表
-     */
-    public List<PostDataEntity> crawlPosts(String fromTime) {
+    public  List<PostDataEntity> crawlHotPosts(Integer count, Integer type) {
         List<PostDataEntity> postDataList = new ArrayList<>();
 
         try {
+            // 设置默认值
+            if (count == null) count = 10;
+            if (type == null) type = 3;
+
             // 生成随机数（X-Sc-Nd）
             String xScNd = generateRandomNumber();
 
@@ -157,13 +168,13 @@ public class PostCrawler {
             String xScTd = String.valueOf(currentTimeSeconds);
 
             // 构建完整URL
-            String apiUrl = buildApiUrl(fromTime);
+            String apiUrl = buildHotApiUrl(count, type);
 
-            // 动态生成请求头
-            Map<String, Object> headers = generateHeaders(xScNd, xScTd, fromTime);
+            // 为热门帖子接口生成请求头 - 需要传入随机数和时间戳
+            Map<String, Object> headers = generateHotHeaders(count, type, xScNd, xScTd);
 
-            log.info("开始爬取帖子数据，URL: {}", apiUrl);
-            log.debug("请求参数: from_time={}, X-Sc-Nd={}, X-Sc-Td={}", fromTime, xScNd, xScTd);
+            log.info("开始爬取热门帖子数据，URL: {}", apiUrl);
+            log.debug("请求参数: count={}, type={}", count, type);
 
             // 打印生成的签名信息（调试用）
             log.debug("生成的请求头参数:");
@@ -194,34 +205,40 @@ public class PostCrawler {
                                 PostDataEntity postDataEntity = convertToPostEntity(postJson);
                                 postDataList.add(postDataEntity);
                             }
-                            log.info("成功爬取到 {} 条帖子数据", postDataList.size());
+                            log.info("成功爬取到 {} 条热门帖子数据", postDataList.size());
                         } else {
-                            log.warn("帖子列表为空");
+                            log.warn("热门帖子列表为空");
                         }
                     }
                 } else {
-                    log.error("接口返回错误: errno={}, errmsg={}", errno, errmsg);
+                    log.error("热门帖子接口返回错误: errno={}, errmsg={}", errno, errmsg);
                     // 可以在这里添加重试逻辑或错误处理
                 }
             } else {
-                log.error("请求返回空响应");
+                log.error("热门帖子请求返回空响应");
             }
 
         } catch (Exception e) {
-            log.error("爬取帖子数据时发生异常: ", e);
+            log.error("爬取热门帖子数据时发生异常: ", e);
         }
 
         return postDataList;
     }
 
-
+    /**
+     * 爬取热门帖子数据（使用默认参数）
+     * @return 帖子实体列表
+     */
+    public  List<PostDataEntity> crawlHotPosts() {
+        return crawlHotPosts(10, 3);
+    }
 
     /**
      * 将JSON对象转换为PostEntity
      * @param postJson JSON对象
      * @return PostEntity
      */
-    private PostDataEntity convertToPostEntity(JSONObject postJson) {
+    private  PostDataEntity convertToPostEntity(JSONObject postJson) {
         PostDataEntity postDataEntity = new PostDataEntity();
 
         // 设置基本字段
@@ -267,4 +284,8 @@ public class PostCrawler {
         return postDataEntity;
     }
 
+//    public  void main(String[] args) {
+//        List<PostDataEntity>  postDataEntities = crawlHotPosts();
+//        System.out.println(postDataEntities);
+//    }
 }

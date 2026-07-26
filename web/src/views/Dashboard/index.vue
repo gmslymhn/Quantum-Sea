@@ -166,72 +166,72 @@
       </el-row>
     </div>
 
-    <!-- 第三行：趋势和热门 -->
-    <div class="trend-section mb-30">
-      <el-row :gutter="20">
-        <!-- 发帖趋势 -->
-        <el-col :span="12">
-          <el-card class="trend-card" shadow="hover">
-            <template #header>
-              <div class="chart-header">
-                <span class="chart-title">最近7天发帖趋势</span>
-              </div>
-            </template>
-            <div v-if="trendData.xAxisData && trendData.xAxisData.length > 0" class="trend-container">
-              <CustomChartLine
-                :title="''"
-                :configData="trendData"
-              />
-            </div>
-            <div v-else class="no-data">
-              <el-empty description="暂无趋势数据" />
-            </div>
-          </el-card>
-        </el-col>
+<!--    &lt;!&ndash; 第三行：趋势和热门 &ndash;&gt;-->
+<!--    <div class="trend-section mb-30">-->
+<!--      <el-row :gutter="20">-->
+<!--        &lt;!&ndash; 发帖趋势 &ndash;&gt;-->
+<!--        <el-col :span="12">-->
+<!--          <el-card class="trend-card" shadow="hover">-->
+<!--            <template #header>-->
+<!--              <div class="chart-header">-->
+<!--                <span class="chart-title">最近7天发帖趋势</span>-->
+<!--              </div>-->
+<!--            </template>-->
+<!--            <div v-if="trendData.xAxisData && trendData.xAxisData.length > 0" class="trend-container">-->
+<!--              <CustomChartLine-->
+<!--                :title="''"-->
+<!--                :configData="trendData"-->
+<!--              />-->
+<!--            </div>-->
+<!--            <div v-else class="no-data">-->
+<!--              <el-empty description="暂无趋势数据" />-->
+<!--            </div>-->
+<!--          </el-card>-->
+<!--        </el-col>-->
 
-        <!-- 热门帖子 -->
-        <el-col :span="12">
-          <el-card class="hot-posts-card" shadow="hover">
-            <template #header>
-              <div class="chart-header">
-                <span class="chart-title">热门帖子 Top 10</span>
-              </div>
-            </template>
-            <div v-if="hotPosts.length > 0" class="hot-posts-list">
-              <div v-for="(post, index) in hotPosts" :key="post.thread_id" class="hot-post-item">
-                <div class="post-rank">
-                  <span class="rank-number" :class="getRankClass(index)">{{ index + 1 }}</span>
-                </div>
-                <div class="post-content">
-                  <div class="post-title">{{ post.title }}</div>
-                  <div class="post-meta">
-                    <span class="post-category">{{ post.cate_name }}</span>
-                    <span class="post-author">{{ post.nickname }}</span>
-                  </div>
-                  <div class="post-stats">
-                    <span class="stat-item">
-                      <el-icon><View /></el-icon>
-                      {{ formatNumber(post.view_count) }}
-                    </span>
-                    <span class="stat-item">
-                      <el-icon><ChatDotSquare /></el-icon>
-                      {{ post.c_count || 0 }}
-                    </span>
-                    <span class="stat-item">
-                      <el-icon><Star /></el-icon>
-                      {{ post.l_count || 0 }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div v-else class="no-data">
-              <el-empty description="暂无热门帖子" />
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-    </div>
+<!--        &lt;!&ndash; 热门帖子 &ndash;&gt;-->
+<!--        <el-col :span="12">-->
+<!--          <el-card class="hot-posts-card" shadow="hover">-->
+<!--            <template #header>-->
+<!--              <div class="chart-header">-->
+<!--                <span class="chart-title">热门帖子 Top 10</span>-->
+<!--              </div>-->
+<!--            </template>-->
+<!--            <div v-if="hotPosts.length > 0" class="hot-posts-list">-->
+<!--              <div v-for="(post, index) in hotPosts" :key="post.thread_id" class="hot-post-item">-->
+<!--                <div class="post-rank">-->
+<!--                  <span class="rank-number" :class="getRankClass(index)">{{ index + 1 }}</span>-->
+<!--                </div>-->
+<!--                <div class="post-content">-->
+<!--                  <div class="post-title">{{ post.title }}</div>-->
+<!--                  <div class="post-meta">-->
+<!--                    <span class="post-category">{{ post.cate_name }}</span>-->
+<!--                    <span class="post-author">{{ post.nickname }}</span>-->
+<!--                  </div>-->
+<!--                  <div class="post-stats">-->
+<!--                    <span class="stat-item">-->
+<!--                      <el-icon><View /></el-icon>-->
+<!--                      {{ formatNumber(post.view_count) }}-->
+<!--                    </span>-->
+<!--                    <span class="stat-item">-->
+<!--                      <el-icon><ChatDotSquare /></el-icon>-->
+<!--                      {{ post.c_count || 0 }}-->
+<!--                    </span>-->
+<!--                    <span class="stat-item">-->
+<!--                      <el-icon><Star /></el-icon>-->
+<!--                      {{ post.l_count || 0 }}-->
+<!--                    </span>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div v-else class="no-data">-->
+<!--              <el-empty description="暂无热门帖子" />-->
+<!--            </div>-->
+<!--          </el-card>-->
+<!--        </el-col>-->
+<!--      </el-row>-->
+<!--    </div>-->
 
     <!-- 第四行：活跃用户和状态统计 -->
     <div class="bottom-section">
@@ -567,7 +567,7 @@ onMounted(() => {
 }
 
 .chart-container {
-  height: 300px;
+  height: 350px;
 }
 
 .no-data {

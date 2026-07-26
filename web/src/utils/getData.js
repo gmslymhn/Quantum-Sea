@@ -159,7 +159,7 @@ const routes = [
       id: 507,
       name: 'predictionAnalysis',
       meta: {
-        title: '预测分析'
+        title: '舆情检测'
       }
     }
     ]

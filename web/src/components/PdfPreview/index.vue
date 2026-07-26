@@ -1,22 +1,25 @@
 <template>
   <div class="pdf-preview">
-    <div id="page-view" :style="{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: `translate(-50%,-50%) scale(${state.scale})`,
-        width: '100%',
-        height: `${pageHeight}`,
-    }">
-      <vue-pdf-embed :source="state.source" :page="state.pageNum" textLayer/>
+    <!-- 用相对定位的容器包裹PDF内容 -->
+    <div class="pdf-content">
+      <div id="page-view" :style="{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: `translate(-50%,-50%) scale(${state.scale})`,
+          width: '100%',
+          height: `${pageHeight}`,
+      }">
+        <vue-pdf-embed :source="state.source" :page="state.pageNum" textLayer/>
+      </div>
     </div>
-  </div>
-  <div class="page-tool">
-    <div class="page-tool-item" @click="lastPage">上一页</div>
-    <div class="page-tool-item" @click="nextPage">下一页</div>
-    <div class="page-tool-item">{{ state.pageNum }}/{{ state.numPages }}</div>
-    <div class="page-tool-item" @click="pageZoomOut">放大</div>
-    <div class="page-tool-item" @click="pageZoomIn">缩小</div>
+
+    <!-- 分页工具栏放在PDF下方 -->
+    <div class="page-tool">
+      <div class="page-tool-item" @click="lastPage">上一页</div>
+      <div class="page-tool-item">{{ state.pageNum }}/{{ state.numPages }}</div>
+      <div class="page-tool-item" @click="nextPage">下一页</div>
+    </div>
   </div>
 </template>
 
@@ -52,20 +55,6 @@ function nextPage() {
   }
 }
 
-function pageZoomOut() {
-  if (state.scale < 2) {
-    state.scale += 0.1;
-    pageHeight.value = (parseInt(pageHeight.value) - 5.0) + '%';
-  }
-}
-
-function pageZoomIn() {
-  if (state.scale > 1) {
-    state.scale -= 0.1;
-    pageHeight.value = (parseInt(pageHeight.value) + 5.0) + '%';
-  }
-}
-
 onMounted(() => {
   const loadingTask = createLoadingTask(state.source);
   loadingTask.promise.then((pdf: { numPages: number }) => {
@@ -77,14 +66,23 @@ onMounted(() => {
 <style scoped>
 .pdf-preview {
   position: relative;
-  height: auto; /* 改为自适应高度 */
-  aspect-ratio: 1/1.41; /* 设置宽高比为 1:1.41 */
+  height: auto;
+  aspect-ratio: 1/1.41;
   padding: 20px 0;
   width: 100%;
   box-sizing: border-box;
   background-color: #e9e9e9;
+  display: flex;
+  flex-direction: column;  /* 纵向排列子元素 */
+  align-items: center;     /* 子元素水平居中 */
 }
 
+.pdf-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex: 1; /* 占据剩余空间 */
+}
 
 .vue-pdf-embed {
   text-align: center;
@@ -94,20 +92,17 @@ onMounted(() => {
   box-sizing: border-box;
 }
 
+/* 分页工具栏放在PDF底部，相对定位 */
 .page-tool {
-  position: fixed;
-  bottom: 35px;
-  padding-left: 15px;
-  padding-right: 15px;
+  width: fit-content;
+  margin-top: 10px;  /* 与PDF区域保持间距 */
   display: flex;
   align-items: center;
   background: rgb(66, 66, 66);
   color: white;
   border-radius: 19px;
-  z-index: 100;
   cursor: pointer;
-  margin-left: 50%;
-  transform: translateX(-50%);
+  z-index: 100;
 }
 
 .page-tool-item {

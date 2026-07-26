@@ -1,11 +1,14 @@
 package tyut.selab.Graduation.service.impl;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tyut.selab.Graduation.config.DetailDataCrawler;
+import tyut.selab.Graduation.config.HotPostCrawler;
 import tyut.selab.Graduation.config.PostCrawler;
 import tyut.selab.Graduation.domain.PostParam;
 import tyut.selab.Graduation.domain.TimeRangeParam;
@@ -47,6 +50,55 @@ private LizardLogMapper lizardLogMapper;
 @Autowired
 private PostCrawler postCrawler;
 
+    // 注入服务
+    @Autowired
+    private HotPostCrawler hotPostCrawler;
+
+    @Autowired
+    private DetailDataCrawler detailDataCrawler;
+    /**
+     * 获取帖子完整数据（详情+评论）
+     * @param threadId 帖子ID
+     * @return JSON格式的完整数据
+     */
+    @Override
+    public JSONObject getPostCompleteData(String threadId) {
+        log.info("获取帖子完整数据，帖子ID: {}", threadId);
+
+        try {
+            // 参数校验
+            if (threadId == null || threadId.trim().isEmpty()) {
+                return createErrorResponse(-1, "帖子ID不能为空");
+            }
+
+            // 调用爬虫获取完整数据
+            JSONObject result = detailDataCrawler.crawlCompleteData(threadId);
+
+            if (result == null) {
+                return createErrorResponse(-1, "获取数据失败");
+            }
+
+            return result;
+
+        } catch (Exception e) {
+            log.error("获取帖子完整数据时发生异常，帖子ID: {}", threadId, e);
+            return createErrorResponse(-1, "获取数据异常: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 创建错误响应
+     * @param errno 错误码
+     * @param errmsg 错误信息
+     * @return JSON错误响应
+     */
+    private JSONObject createErrorResponse(int errno, String errmsg) {
+        JSONObject errorResponse = new JSONObject();
+        errorResponse.put("errno", errno);
+        errorResponse.put("errmsg", errmsg);
+        errorResponse.put("data", new JSONObject());
+        return errorResponse;
+    }
     @Override
     public R getPostDataList(PostParam postParam) {
         Page<PostDataEntity> page = new Page<>(postParam.getPageNum(), postParam.getPageSize());
@@ -108,6 +160,11 @@ private PostCrawler postCrawler;
             return R.error("爬取失败！");
         }
         return R.success(postDataList);
+    }
+
+    @Override
+    public R getHotPostData() {
+        return R.success(hotPostCrawler.crawlHotPosts());
     }
     @Override
     public R getSummaryData() {
